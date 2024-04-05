@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+#include "game.hpp"
+
+using namespace std;
+
+#define FPS 60
+#define WIDTH 800
+#define HEIGHT 800
+
+// agents configuration
+#define AGENT_COUNT 20
+
+int main(int argc, char* argv[]) {
+
+  if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+    cout << "Error initializing SDL: " << SDL_GetError() << endl;
+  }
+  SDL_Window* window = SDL_CreateWindow(
+    "Boids Simulation",
+    SDL_WINDOWPOS_CENTERED,
+    SDL_WINDOWPOS_CENTERED,
+    WIDTH,
+    HEIGHT,
+    0
+  );
+  SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+  cout << "Game initialized." << endl;
+
+  Agent* agents = spawn_agents(AGENT_COUNT, WIDTH, HEIGHT);
+
+  bool running = true;
+  SDL_Event event;
+  while (running) {
+    Uint32 start_time = SDL_GetTicks();
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) {
+        running = false;
+      }
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    draw_grid(renderer, agents, WIDTH, HEIGHT);
+    update_agents(agents, WIDTH, HEIGHT);
+
+    SDL_RenderPresent(renderer);
+
+    Uint32 end_time = SDL_GetTicks();
+    if (end_time - start_time < 1000 / FPS) {
+      SDL_Delay(1000 / FPS - (end_time - start_time));
+    }
+  }
+
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+
+  return 0;
+}
