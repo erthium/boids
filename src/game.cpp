@@ -38,14 +38,14 @@ Agent* spawn_agents(Master master) {
 bool is_in_visual(Agent agent, Agent other, Master master) {
   int dx = agent.x - other.x;
   int dy = agent.y - other.y;
-  return sqrt(dx * dx + dy * dy) < master.VISUAL_RANGE;
+  return (dx * dx + dy * dy) < master.VISUAL_RANGE * master.VISUAL_RANGE;
 }
 
 
 bool is_in_protected_range(Agent agent, Agent other, Master master) {
   int dx = agent.x - other.x;
   int dy = agent.y - other.y;
-  return sqrt(dx * dx + dy * dy) < master.PROTECTED_RANGE;
+  return (dx * dx + dy * dy) < master.PROTECTED_RANGE * master.PROTECTED_RANGE;
 }
 
 
