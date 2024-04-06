@@ -65,6 +65,17 @@ int main(int argc, char* argv[]) {
       if (event.type == SDL_QUIT) {
         running = false;
       }
+      if (event.type == SDL_KEYDOWN) {
+        // restart
+        if (event.key.keysym.sym == SDLK_r) {
+          delete[] agents;
+          agents = spawn_agents(master);
+        }
+        // debug mode
+        if (event.key.keysym.sym == SDLK_d) {
+          master.DEBUG = !master.DEBUG;
+        }
+      }
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
