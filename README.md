@@ -5,7 +5,7 @@ Simple simulation of **Boid** artificial life program initially developed by Cra
 ---
 
 <p align="left">
-  <img width="400" height="225" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/general.gif">
+  <img width="600" height="330" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/general.gif">
 </p>
 
 ---
@@ -64,14 +64,14 @@ The simulation allows you to:
 **Speeding Up/Down**
 
 <p align="left">
-  <img width="400" height="225" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/speed_up_down.gif">
+  <img width="600" height="330" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/speed_up_down.gif">
 </p>
 
 
 **Debug Mode**
 
 <p align="left">
-  <img width="400" height="225" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/debug_mode.gif">
+  <img width="600" height="330" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/debug_mode.gif">
 </p>
 
 ## General Structure
