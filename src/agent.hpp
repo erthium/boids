@@ -1,7 +1,8 @@
 #pragma once
 
 struct Agent {
-  int x, y;
-  int speed;
-  int direction;
+  int x;
+  int y;
+  float speed_x;
+  float speed_y;
 };
