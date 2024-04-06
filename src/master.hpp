@@ -4,7 +4,7 @@ struct Master {
   int WIDTH;
   int HEIGHT;
   size_t AGENT_COUNT;
-  int FPS;
+  uint32_t FPS;
   int MARGIN;
   float TURN_FACTOR;
   float MATCH_FACTOR;

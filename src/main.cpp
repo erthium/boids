@@ -75,6 +75,18 @@ int main(int argc, char* argv[]) {
         if (event.key.keysym.sym == SDLK_d) {
           master.DEBUG = !master.DEBUG;
         }
+        // slow down
+        if (event.key.keysym.sym == SDLK_q) {
+          if (master.FPS > 4) {
+            master.FPS /= 2;
+          }
+        }
+        // speed up
+        if (event.key.keysym.sym == SDLK_e) {
+          if (master.FPS < 1000) {
+            master.FPS *= 2;
+          }
+        }
       }
     }
 
@@ -82,18 +94,18 @@ int main(int argc, char* argv[]) {
     SDL_RenderClear(renderer);
 
     // BEGIN Game Logic
-  
-    update_agents(agents, master);
-    move_agents(agents, master);
+    if (master.FPS > 4) {
+      update_agents(agents, master);
+      move_agents(agents, master);
+    }
     draw_agents(renderer, agents, master);
-
     // END Game Logic
 
     SDL_RenderPresent(renderer);
 
     Uint32 end_time = SDL_GetTicks();
-    if (end_time - start_time < 1000 / FPS) {
-      SDL_Delay(1000 / FPS - (end_time - start_time));
+    if (end_time - start_time < 1000 / master.FPS) {
+      SDL_Delay(1000 / master.FPS - (end_time - start_time));
     }
   }
 
