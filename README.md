@@ -2,6 +2,16 @@
 
 Simple simulation of **Boid** artificial life program initially developed by Craig Reynolds in 1986.
 
+---
+
+<p align="left">
+  <img width="400" height="225" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/general.gif">
+</p>
+
+---
+
+The main source that I followed while developing the simulation is [Boids - Cornell ECE](https://people.ece.cornell.edu/land/courses/ece4760/labs/s2021/Boids/Boids.html), I appreciate the detailed explanation and the code provided.
+
 ## License
 
 This project is licensed under the [GNU GPL-3.0](https://github.com/ErtyumPX/boids/blob/main/LICENSE) license.
@@ -44,16 +54,38 @@ As with most artificial life simulations, Boids is an example of emergent behavi
 
 Source: [Wikipedia Boids](https://en.wikipedia.org/wiki/Boids)
 
+## Simulation
+
+The simulation allows you to:
+- Speed up/down the simulation using `q` and `e` keys
+- Toggle the debug mode for seeing each agents' visual and protected range using `d` key
+- Restart the simulation using `r` key
+
+**Speeding Up/Down**
+
+<p align="left">
+  <img width="400" height="225" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/speed_up_down.gif">
+</p>
+
+
+**Debug Mode**
+
+<p align="left">
+  <img width="400" height="225" src="https://raw.githubusercontent.com/ErtyumPX/boids/main/assets/images/debug_mode.gif">
+</p>
+
 ## General Structure
 
 ### Directory Structure and Files
 
 - `src/` directory contains the source code
   - `src/main.cpp` is the entry point of the program
-  - `src/game.hpp` contains the declarations of the methods
-  - `src/game.cpp` contains the implementation
+  - `src/game.hpp` contains the declarations of the core functions
+  - `src/game.cpp` contains the implementation of core functions
+  - `src/agent.hpp` has the struct of the boid agents
+  - `src/master.cpp` has the struct of all the configurations for the simulation
 - `stable/` directory contains the stable output
-  - `stable/game.life` is the executable
+  - `stable/boids.follow` is the executable
 
 ### How It Goes
 
