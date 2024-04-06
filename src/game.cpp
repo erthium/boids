@@ -10,11 +10,40 @@ void draw_agents(SDL_Renderer* renderer, Agent* agents, Master master) {
   SDL_RenderClear(renderer);
   
   // render every agent
-  for (int i = 0; i < master.AGENT_COUNT; i++) {
+  for (size_t i = 0; i < master.AGENT_COUNT; i++) {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawLine(renderer, agents[i].x, agents[i].y, agents[i].x + 10, agents[i].y + 10);
-    SDL_RenderDrawLine(renderer, agents[i].x, agents[i].y, agents[i].x - 10, agents[i].y + 10);
-    SDL_RenderDrawLine(renderer, agents[i].x + 10, agents[i].y + 10, agents[i].x - 10, agents[i].y + 10);
+    // find 3 points of the triangle, make the one that is in the direction of the agent longer
+    float angle = atan2(agents[i].speed_y, agents[i].speed_x);
+    float x1 = agents[i].x + 13 * cos(angle);
+    float y1 = agents[i].y + 13 * sin(angle);
+    float x2 = agents[i].x + 5 * cos(angle + 3.14 / 2);
+    float y2 = agents[i].y + 5 * sin(angle + 3.14 / 2);
+    float x3 = agents[i].x + 5 * cos(angle - 3.14 / 2);
+    float y3 = agents[i].y + 5 * sin(angle - 3.14 / 2);
+    // draw the triangle
+    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLine(renderer, x2, y2, x3, y3);
+    SDL_RenderDrawLine(renderer, x3, y3, x1, y1);
+
+    // debug mode
+    if (master.DEBUG) {
+      SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+      SDL_Rect protected_range = {
+        agents[i].x - master.PROTECTED_RANGE,
+        agents[i].y - master.PROTECTED_RANGE,
+        2 * master.PROTECTED_RANGE,
+        2 * master.PROTECTED_RANGE
+      };
+      SDL_RenderDrawRect(renderer, &protected_range);
+      SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+      SDL_Rect visual_range = {
+        agents[i].x - master.VISUAL_RANGE,
+        agents[i].y - master.VISUAL_RANGE,
+        2 * master.VISUAL_RANGE,
+        2 * master.VISUAL_RANGE
+      };
+      SDL_RenderDrawRect(renderer, &visual_range);
+    }
   }
 
   SDL_RenderPresent(renderer);

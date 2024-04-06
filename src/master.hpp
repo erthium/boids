@@ -3,7 +3,7 @@
 struct Master {
   int WIDTH;
   int HEIGHT;
-  int AGENT_COUNT;
+  size_t AGENT_COUNT;
   int FPS;
   int MARGIN;
   float TURN_FACTOR;
@@ -14,4 +14,5 @@ struct Master {
   float PROTECTED_RANGE;
   float MAX_SPEED;
   float MIN_SPEED;
+  bool DEBUG;
 };
