@@ -7,21 +7,21 @@
 using namespace std;
 
 #define FPS 60
-#define WIDTH 1024
-#define HEIGHT 768
+#define WIDTH 1800
+#define HEIGHT 900
 #define MARGIN 10
 
-#define AGENT_COUNT 20
+#define AGENT_COUNT 40
 
 // agents configuration
-#define VISUAL_RANGE 50
-#define PROTECTED_RANGE 10
-#define MAX_SPEED 5
+#define VISUAL_RANGE 140
+#define PROTECTED_RANGE 20
+#define MAX_SPEED 3
 #define MIN_SPEED 2
 #define TURN_FACTOR 0.2
-#define MATCH_FACTOR 0.1
-#define AVOID_FACTOR 0.1
-#define CENTER_FACTOR 0.1
+#define MATCH_FACTOR 0.005
+#define AVOID_FACTOR 0.009
+#define CENTER_FACTOR 0.0005
 
 int main(int argc, char* argv[]) {
 
