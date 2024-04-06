@@ -24,12 +24,13 @@ void draw_agents(SDL_Renderer* renderer, Agent* agents, Master master) {
 Agent* spawn_agents(Master master) {
   srand(time(NULL));
   Agent* agents = new Agent[master.AGENT_COUNT];
-  for (int i = 0; i < master.AGENT_COUNT; i++) {
+  for (size_t i = 0; i < master.AGENT_COUNT; i++) {
     // create x y and speed values considering margin as well
     agents[i].x = rand() % (master.WIDTH - 2 * master.MARGIN) + master.MARGIN;
     agents[i].y = rand() % (master.HEIGHT - 2 * master.MARGIN) + master.MARGIN;
-    agents[i].speed_x = (rand() % (int)master.MAX_SPEED) + master.MIN_SPEED;
-    agents[i].speed_y = (rand() % (int)master.MAX_SPEED) + master.MIN_SPEED;
+    // random speed values
+    agents[i].speed_x = (rand() % 100) / 100.0 - 0.5;
+    agents[i].speed_y = (rand() % 100) / 100.0 - 0.5;
   }
   return agents;
 }
