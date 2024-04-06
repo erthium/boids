@@ -7,8 +7,9 @@
 using namespace std;
 
 #define FPS 60
-#define WIDTH 800
-#define HEIGHT 800
+#define WIDTH 1024
+#define HEIGHT 768
+#define MARGIN 10
 
 #define AGENT_COUNT 20
 
@@ -38,7 +39,23 @@ int main(int argc, char* argv[]) {
   SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
   cout << "Game initialized." << endl;
 
-  Agent* agents = spawn_agents(AGENT_COUNT, WIDTH, HEIGHT);
+  Master master = {
+    WIDTH,
+    HEIGHT,
+    AGENT_COUNT,
+    FPS,
+    MARGIN,
+    TURN_FACTOR,
+    MATCH_FACTOR,
+    AVOID_FACTOR,
+    CENTER_FACTOR,
+    VISUAL_RANGE,
+    PROTECTED_RANGE,
+    MAX_SPEED,
+    MIN_SPEED
+  };
+
+  Agent* agents = spawn_agents(master);
 
   bool running = true;
   SDL_Event event;
@@ -53,8 +70,13 @@ int main(int argc, char* argv[]) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    draw_grid(renderer, agents, WIDTH, HEIGHT);
-    update_agents(agents, WIDTH, HEIGHT);
+    // BEGIN Game Logic
+  
+    update_agents(agents, master);
+    move_agents(agents, master);
+    draw_agents(renderer, agents, master);
+
+    // END Game Logic
 
     SDL_RenderPresent(renderer);
 
