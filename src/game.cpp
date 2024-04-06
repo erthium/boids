@@ -50,13 +50,82 @@ bool is_in_protected_range(Agent agent, Agent other, Master master) {
 
 
 void update_agents(Agent* agents, Master master) {
-  return;
+  for (size_t i = 0; i < master.AGENT_COUNT; i++) {
+    // find all neighbors of agent i
+    vector<int> in_protected_range = {};
+    vector<int> in_visual_range = {};
+    for (size_t j = 0; j < master.AGENT_COUNT; j++) {
+      if (i != j) {
+        if (is_in_protected_range(agents[i], agents[j], master)) {
+          in_protected_range.push_back(j);
+        }
+        if (is_in_visual(agents[i], agents[j], master)) {
+          in_visual_range.push_back(j);
+        }
+      }
+    }
+
+    // separation
+    float close_dx = 0;
+    float close_dy = 0;
+    for (size_t j = 0; j < in_protected_range.size(); j++) {
+      int neighbor = in_protected_range[j];
+      close_dx += agents[i].x - agents[neighbor].x;
+      close_dy += agents[i].y - agents[neighbor].y;
+    }
+    agents[i].speed_x += master.AVOID_FACTOR * close_dx;
+    agents[i].speed_y += master.AVOID_FACTOR * close_dy;
+
+    // alignment
+    float avg_x_speed = 0;
+    float avg_y_speed = 0;
+    if (in_visual_range.size() > 0) {
+      for (size_t j = 0; j < in_visual_range.size(); j++) {
+        int neighbor = in_visual_range[j];
+        avg_x_speed += agents[neighbor].speed_x;
+        avg_y_speed += agents[neighbor].speed_y;
+      }
+      avg_x_speed /= in_visual_range.size();
+      avg_y_speed /= in_visual_range.size();
+      agents[i].speed_x += master.MATCH_FACTOR * (avg_x_speed - agents[i].speed_x);
+      agents[i].speed_y += master.MATCH_FACTOR * (avg_y_speed - agents[i].speed_y);
+    }
+
+    // cohesion
+    float avg_x = 0;
+    float avg_y = 0;
+    if (in_visual_range.size() > 0) {
+      for (size_t j = 0; j < in_visual_range.size(); j++) {
+        int neighbor = in_visual_range[j];
+        avg_x += agents[neighbor].x;
+        avg_y += agents[neighbor].y;
+      }
+      avg_x /= in_visual_range.size();
+      avg_y /= in_visual_range.size();
+      agents[i].speed_x += master.CENTER_FACTOR * (avg_x - agents[i].x);
+      agents[i].speed_y += master.CENTER_FACTOR * (avg_y - agents[i].y);
+    }
+
+    // avoiding screen edges
+    if (agents[i].x < master.MARGIN) {
+      agents[i].speed_x += master.TURN_FACTOR;
+    }
+    if (agents[i].x > master.WIDTH - master.MARGIN) {
+      agents[i].speed_x -= master.TURN_FACTOR;
+    }
+    if (agents[i].y < master.MARGIN) {
+      agents[i].speed_y += master.TURN_FACTOR;
+    }
+    if (agents[i].y > master.HEIGHT - master.MARGIN) {
+      agents[i].speed_y -= master.TURN_FACTOR;
+    }
+  }   
 }
 
 
 void move_agents(Agent* agents, Master master) {
   // move agent according to its speed
-  for (int i = 0; i < master.AGENT_COUNT; i++)  {
+  for (size_t i = 0; i < master.AGENT_COUNT; i++)  {
     agents[i].x += agents[i].speed_x;
     agents[i].y += agents[i].speed_y;
     // min max speed clamping
