@@ -10,8 +10,17 @@ using namespace std;
 #define WIDTH 800
 #define HEIGHT 800
 
-// agents configuration
 #define AGENT_COUNT 20
+
+// agents configuration
+#define VISUAL_RANGE 50
+#define PROTECTED_RANGE 10
+#define MAX_SPEED 5
+#define MIN_SPEED 2
+#define TURN_FACTOR 0.2
+#define MATCH_FACTOR 0.1
+#define AVOID_FACTOR 0.1
+#define CENTER_FACTOR 0.1
 
 int main(int argc, char* argv[]) {
 
