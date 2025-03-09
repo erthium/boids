@@ -7,7 +7,18 @@
 void draw_agents(SDL_Renderer* renderer, Agent* agents, Master master) {
   // render every agent
   for (size_t i = 0; i < master.AGENT_COUNT; i++) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    // set color according to class
+    switch (agents[i].class_id) {
+      case RED:
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        break;
+      case GREEN:
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        break;
+      case BLUE:
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+        break;
+    }
     // find 3 points of the triangle, make the one that is in the direction of the agent longer
     float angle = atan2(agents[i].speed_y, agents[i].speed_x);
     float x1 = agents[i].x + 13 * cos(angle);
@@ -45,7 +56,7 @@ void draw_agents(SDL_Renderer* renderer, Agent* agents, Master master) {
 
 
 Agent* spawn_agents(Master master) {
-  srand(time(NULL));
+  srand(rand() + time(0));
   Agent* agents = new Agent[master.AGENT_COUNT];
   for (size_t i = 0; i < master.AGENT_COUNT; i++) {
     // create x y and speed values considering margin as well
@@ -54,6 +65,8 @@ Agent* spawn_agents(Master master) {
     // random speed values
     agents[i].speed_x = (rand() % 100) / 100.0 - 0.5;
     agents[i].speed_y = (rand() % 100) / 100.0 - 0.5;
+    // random class
+    agents[i].class_id = rand() % 3;
   }
   return agents;
 }
@@ -70,6 +83,44 @@ bool is_in_protected_range(Agent agent, Agent other, Master master) {
   int dx = agent.x - other.x;
   int dy = agent.y - other.y;
   return (dx * dx + dy * dy) < master.PROTECTED_RANGE * master.PROTECTED_RANGE;
+}
+
+
+bool is_in_same_class(Agent agent, Agent other) {
+  return agent.class_id == other.class_id;
+}
+
+
+float agent_reaction(Agent agent, Agent other) {
+  switch (agent.class_id) {
+    case RED:
+      switch (other.class_id) {
+        case RED:
+          return 1;
+        case GREEN:
+          return 0;
+        case BLUE:
+          return 0;
+      }
+    case GREEN:
+      switch (other.class_id) {
+        case RED:
+          return 0;
+        case GREEN:
+          return 1;
+        case BLUE:
+          return 0;
+      }
+    case BLUE:
+      switch (other.class_id) {
+        case RED:
+          return 0;
+        case GREEN:
+          return 0;
+        case BLUE:
+          return 1;
+      }
+  }
 }
 
 
@@ -104,30 +155,40 @@ void update_agents(Agent* agents, Master master) {
     float avg_x_speed = 0;
     float avg_y_speed = 0;
     if (in_visual_range.size() > 0) {
+      int same_class_count = 0;
       for (size_t j = 0; j < in_visual_range.size(); j++) {
         int neighbor = in_visual_range[j];
+        if (!is_in_same_class(agents[i], agents[neighbor])) continue;
+        same_class_count++;
         avg_x_speed += agents[neighbor].speed_x;
         avg_y_speed += agents[neighbor].speed_y;
       }
-      avg_x_speed /= in_visual_range.size();
-      avg_y_speed /= in_visual_range.size();
-      agents[i].speed_x += master.MATCH_FACTOR * (avg_x_speed - agents[i].speed_x);
-      agents[i].speed_y += master.MATCH_FACTOR * (avg_y_speed - agents[i].speed_y);
+      if (same_class_count > 0) {
+        avg_x_speed /= same_class_count;
+        avg_y_speed /= same_class_count;
+        agents[i].speed_x += master.MATCH_FACTOR * (avg_x_speed - agents[i].speed_x);
+        agents[i].speed_y += master.MATCH_FACTOR * (avg_y_speed - agents[i].speed_y);
+      }
     }
 
     // cohesion
     float avg_x = 0;
     float avg_y = 0;
     if (in_visual_range.size() > 0) {
+      int same_class_count = 0;
       for (size_t j = 0; j < in_visual_range.size(); j++) {
         int neighbor = in_visual_range[j];
+        if (!is_in_same_class(agents[i], agents[neighbor])) continue;
+        same_class_count++;
         avg_x += agents[neighbor].x;
         avg_y += agents[neighbor].y;
       }
-      avg_x /= in_visual_range.size();
-      avg_y /= in_visual_range.size();
-      agents[i].speed_x += master.CENTER_FACTOR * (avg_x - agents[i].x);
-      agents[i].speed_y += master.CENTER_FACTOR * (avg_y - agents[i].y);
+      if (same_class_count > 0) {
+        avg_x /= same_class_count;
+        avg_y /= same_class_count;
+        agents[i].speed_x += master.CENTER_FACTOR * (avg_x - agents[i].x);
+        agents[i].speed_y += master.CENTER_FACTOR * (avg_y - agents[i].y);
+      }
     }
 
     // avoiding screen edges
@@ -150,8 +211,6 @@ void update_agents(Agent* agents, Master master) {
 void move_agents(Agent* agents, Master master) {
   // move agent according to its speed
   for (size_t i = 0; i < master.AGENT_COUNT; i++)  {
-    agents[i].x += agents[i].speed_x;
-    agents[i].y += agents[i].speed_y;
     // min max speed clamping
     // min max speed represents the minimum and maximum velocity an agent can have, direction included
     float total_speed = sqrt(agents[i].speed_x * agents[i].speed_x + agents[i].speed_y * agents[i].speed_y);
@@ -163,5 +222,8 @@ void move_agents(Agent* agents, Master master) {
       agents[i].speed_x = agents[i].speed_x / total_speed * master.MIN_SPEED;
       agents[i].speed_y = agents[i].speed_y / total_speed * master.MIN_SPEED;
     }
+    // move agent
+    agents[i].x += agents[i].speed_x;
+    agents[i].y += agents[i].speed_y;
   }
 }

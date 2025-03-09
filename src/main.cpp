@@ -9,18 +9,18 @@ using namespace std;
 int main(int argc, char* argv[]) {
 
     Master master;
-    master.WIDTH = 1800;
-    master.HEIGHT = 900;
-    master.AGENT_COUNT = 100;
+    master.WIDTH = 1000;
+    master.HEIGHT = 1000;
+    master.AGENT_COUNT = 500;
     master.FPS = 60;
-    master.MARGIN = 40;
-    master.VISUAL_RANGE = 140;
-    master.PROTECTED_RANGE = 10;
+    master.MARGIN = 300;
+    master.VISUAL_RANGE = 170;
+    master.PROTECTED_RANGE = 50;
     master.MAX_SPEED = 5;
     master.MIN_SPEED = 2;
     master.TURN_FACTOR = 0.2;
     master.MATCH_FACTOR = 0.005;
-    master.AVOID_FACTOR = 0.004;
+    master.AVOID_FACTOR = 0.0001;
     master.CENTER_FACTOR = 0.0005;
     master.DEBUG = false;
 

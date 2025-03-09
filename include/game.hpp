@@ -14,6 +14,10 @@ bool is_in_visual(Agent agent, Agent other, Master master);
 
 bool is_in_protected_range(Agent agent, Agent other, Master master);
 
+bool is_in_same_class(Agent agent, Agent other);
+
+float agent_reaction(Agent agent, Agent other);
+
 void update_agents(Agent* agents, Master master);
 
 void move_agents(Agent* agents, Master master);
