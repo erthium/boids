@@ -28,6 +28,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(EXECUTABLE): $(OBJ)
+	@mkdir -p $(BIN_DIR)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
 test: $(TEST_EXECUTABLE)
